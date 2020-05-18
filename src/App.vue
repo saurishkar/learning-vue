@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <TabIndex />
+    <TodoIndex />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TodoIndex from "./components/todos/Index.vue";
+import TabIndex from "./components/tabs/Index.vue";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TodoIndex,
+    TabIndex
   }
 }
 </script>

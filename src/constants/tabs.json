@@ -1,0 +1,21 @@
+[
+  {
+    "name": "introduction",
+    "subTabs": [{ "name": "what is vue.js" }, { "name": "getting started" }]
+  },
+  {
+    "name": "the vue instance",
+    "subTabs": [
+      { "name": "creating a vue instance" },
+      { "name": "data and methods" },
+      { "name": "instance lifecycle hooks" }
+    ]
+  },
+  {
+    "name": "list rendering",
+    "subTabs": [
+      { "name": "mapping an array to elements" },
+      { "name": "v-for with an Object" }
+    ]
+  }
+]
