@@ -45,9 +45,8 @@ export default {
   },
   methods: {
     onSubTabClick: function(tab = {}) {
-      console.log(tab);
       this.activeChildTab = tab.name;
-      this.setContent(tab.content);
+      this.setContent(tab);
     },
   },
 };

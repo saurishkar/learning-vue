@@ -14,7 +14,7 @@
       </ul>
     </div>
     <div class="tab-body">
-      <TabContent :value="content" :name="activeTab" />
+      <TabContent :value="content" :name="activeTab" :subTitle="subTitle" />
     </div>
   </div>
 </template>
@@ -36,20 +36,25 @@ export default {
       tabs: TabData,
       activeTab: "",
       content: "",
+      subTitle: ""
     };
   },
   mounted: function() {
+    const subTab = get(this.tabs, "[0].subTabs.0", {});
     this.activeTab = this.tabs[0].name;
-    console.log(get(this.tabs, "[0].subTabs.0.content", ""))
-    this.content = get(this.tabs, "[0].subTabs.0.content", "");
+    this.content = subTab.content;
+    this.subTitle = subTab.name;
   },
   methods: {
     setTabActive: function(tab = {}) {
+      const subTab = get(tab, "subTabs.0", {});
       this.activeTab = tab.name;
-      this.content = get(tab, "subTabs.0.content", "");
+      this.content = subTab.content;
+      this.subTitle = subTab.name;
     },
-    setContent: function(content = "") {
-      this.content = content;
+    setContent: function(tab = {}) {
+      this.content = tab.content;
+      this.subTitle = tab.name;
     },
   },
 };
