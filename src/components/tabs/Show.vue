@@ -1,5 +1,5 @@
 <template>
-  <div class="tab" @click="onClick(tab.name)">
+  <div class="tab" @click.stop="onClick(tab)">
     <div class="tab-name" :class="activeClass">{{ tab.name }}</div>
     <ul class="sub-tabs" v-if="active">
       <li v-for="subTab in subTabs" :key="subTab.name">
@@ -43,18 +43,11 @@ export default {
       return this.active ? "active" : "";
     }
   },
-  // watch: {
-  //   activeChildTab: function(oldTab, newTab) {
-  //     const activeTab = this.subTabs.find((tab) => tab.name === newTab);
-  //     this.setContent(get(activeTab, "content", ""));
-  //   },
-  //   active: function() {
-  //     this.setContent("");
-  //   }
-  // },
   methods: {
-    onSubTabClick: function(tabName = "") {
-      this.activeChildTab = tabName;
+    onSubTabClick: function(tab = {}) {
+      console.log(tab);
+      this.activeChildTab = tab.name;
+      this.setContent(tab.content);
     },
   },
 };
