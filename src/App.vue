@@ -1,21 +1,21 @@
 <template>
   <div id="app">
-    <TabIndex />
-    <TodoIndex />
+    <Navbar />
+    <div class="page-content"><Router /></div>
   </div>
 </template>
 
 <script>
-import TodoIndex from "./components/todos/Index.vue";
-import TabIndex from "./components/tabs/Index.vue";
+import Router from "./Router.vue";
+import Navbar from "./components/nav/Navbar.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    TodoIndex,
-    TabIndex
-  }
-}
+    Router,
+    Navbar
+  },
+};
 </script>
 
 <style>
@@ -26,5 +26,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.page-content {
+  margin-top: 5em;
 }
 </style>
