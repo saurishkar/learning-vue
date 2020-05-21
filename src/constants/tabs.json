@@ -1,14 +1,17 @@
 [
   {
     "name": "introduction",
-    "subTabs": [{ "name": "what is vue.js" }, { "name": "getting started" }]
+    "subTabs": [
+      { "name": "what is vue.js", "content": "Basic Vue intro" },
+      { "name": "getting started", "content": "Start learning Vue" }
+    ]
   },
   {
     "name": "the vue instance",
     "subTabs": [
-      { "name": "creating a vue instance" },
-      { "name": "data and methods" },
-      { "name": "instance lifecycle hooks" }
+      { "name": "creating a vue instance", "content": "Vue instance" },
+      { "name": "data and methods", "content": "Vue related methods and data binding" },
+      { "name": "instance lifecycle hooks", "content": "Look into what methods are fired in the lifecycle of component" }
     ]
   },
   {
