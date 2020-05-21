@@ -1,0 +1,8 @@
+{
+  "home": "/",
+  "examples": {
+    "tabs": "/examples/tabs",
+    "form": "/examples/form",
+    "todos": "/examples/todos"
+  }
+}
