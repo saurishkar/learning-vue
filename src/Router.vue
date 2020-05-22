@@ -1,7 +1,7 @@
 <script type="text/javascript">
 import TabsIndex from "./components/tabs/Index";
 import TodosIndex from "./components/todos/Index";
-import Form from "./components/Form";
+import RegistrationForm from "./components/form/Registration.vue";
 import Home from "./components/Home";
 import NotFound from "./components/NotFound";
 import ROUTES from "./constants/routes.json";
@@ -10,7 +10,7 @@ const routeMapping = {
   [ROUTES.home]: Home,
   [ROUTES.examples.tabs]: TabsIndex,
   [ROUTES.examples.todos]: TodosIndex,
-  [ROUTES.examples.form]: Form
+  [ROUTES.examples.form]: RegistrationForm
 };
 
 export default {
