@@ -7,7 +7,7 @@
           <label for="loginId">Login Id</label>
           <input
             type="text"
-            v-model="loginId"
+            v-model="formValues.loginId.value"
             name="loginId"
             id="loginId"
             placeholder="Your login id"
@@ -19,7 +19,7 @@
           <label for="email">Email</label>
           <input
             type="text"
-            v-model="email"
+            v-model="formValues.email.value"
             id="email"
             placeholder="johndoe@example.com"
             name="email"
@@ -31,7 +31,7 @@
           <label for="name">Name</label>
           <input
             type="text"
-            v-model="name"
+            v-model="formValues.name.value"
             id="name"
             placeholder="John Doe"
             name="name"
@@ -41,7 +41,11 @@
         </div>
         <div class="form-control">
           <label for="timezone">Timezone</label>
-          <select v-model="timezone" name="timezone" class="select-timezone">
+          <select
+            v-model="formValues.timezone.value"
+            name="timezone"
+            class="select-timezone"
+          >
             <option value="GMT">GMT</option>
             <option value="IST">IST</option>
             <option value="PDT">PDT</option>
@@ -51,7 +55,7 @@
           <label for="homePage">Homepage</label>
           <input
             type="text"
-            v-model="homePage"
+            v-model="formValues.homePage.value"
             name="homePage"
             id="homePage"
             placeholder="www.google.com"
@@ -61,11 +65,21 @@
         </div>
         <div class="form-control aboutMe">
           <label for="aboutMe">About me</label>
-          <textarea v-model="aboutMe" name="aboutMe" id="aboutMe" @change="elemChanged" />
+          <textarea
+            v-model="formValues.aboutMe.value"
+            name="aboutMe"
+            id="aboutMe"
+            @change="elemChanged"
+          />
           <div class="error" v-if="errors.aboutMe">{{ errors.aboutMe }}</div>
         </div>
         <div class="form-control notify">
-          <input type="checkbox" v-model="notify" name="notify" id="notify" />
+          <input
+            type="checkbox"
+            v-model="formValues.notify.value"
+            name="notify"
+            id="notify"
+          />
           <label for="notify">
             <div class="label">
               <b>Receive notification of comments</b>
@@ -87,63 +101,92 @@
 
 <script type="text/javascript">
 import omit from "lodash/omit";
-import { isEmail, isEmpty, maxLengthN, isUrl } from "../../helpers/validate";
+import { validator } from "@/helpers/validate";
 
-const defaultValues = {
-  errors: {},
-  loginId: "",
-  name: "",
-  aboutMe: "",
-  timezone: "GMT",
-  notify: false,
-  homePage: "",
-  email: "",
-};
-const aboutMeLength = 50, required = "Required";
+const defaultFormObj = Object.freeze({
+  value: "",
+  validate: {
+    presence: true,
+  },
+});
 
 export default {
   name: "RegistrationForm",
-  data: function() {
+  data() {
     return {
-      ...defaultValues,
+      errors: {},
+      formValues: {
+        loginId: { ...defaultFormObj },
+        name: { ...defaultFormObj },
+        aboutMe: {
+          ...defaultFormObj,
+          validate: {
+            ...defaultFormObj.validate,
+            length: { max: 50 },
+          },
+        },
+        timezone: {
+          ...defaultFormObj,
+          value: "GMT",
+        },
+        notify: {
+          ...defaultFormObj,
+          value: false,
+        },
+        homePage: {
+          ...defaultFormObj,
+          validate: {
+            ...defaultFormObj.validate,
+            url: true,
+          },
+        },
+        email: {
+          ...defaultFormObj,
+          validate: {
+            ...defaultFormObj.validate,
+            email: true,
+          },
+        },
+      },
     };
   },
   methods: {
-    validate: function() {
+    validate() {
       let errors = {};
-      if (isEmpty(this.loginId)) {
-        errors.loginId = required;
-      }
-      if (isEmpty(this.name)) {
-        errors.name = required;
-      }
-      if (isEmpty(this.email)) {
-        errors.email = required;
-      } else if(!isEmail(this.email)) {
-        errors.email = "Invalid Email";
-      }
-      if (isEmpty(this.aboutMe)) {
-        errors.aboutMe = required;
-      } else if(!maxLengthN(this.aboutMe, aboutMeLength)) {
-        errors.aboutMe = `Max. ${aboutMeLength} characters`;
-      }
-      if (isEmpty(this.homePage)) {
-        errors.homePage = required;
-      } else if(!isUrl(this.homePage)) {
-        errors.homePage = "Invalid Url";
+
+      for (let key in this.formValues) {
+        const err = validator(this.formValues[key]);
+        if (err.length > 0) {
+          errors[key] = err.shift();
+        }
       }
       if (Object.keys(errors).length) {
         return (this.errors = { ...errors });
       }
       return this.submitForm();
     },
-    submitForm: function() {
+    submitForm() {
       alert("Form submitted");
-      for (let prop in defaultValues) {
-        this[prop] = defaultValues[prop];
-      }
+      const {
+        loginId,
+        name,
+        email,
+        timezone,
+        notify,
+        homePage,
+        aboutMe
+      } = this.formValues;
+      this.formValues = {
+        loginId: { ...loginId, value: "" },
+        name: { ...name, value: "" },
+        aboutMe: { ...aboutMe, value: "" },
+        timezone: { ...timezone, value: "GMT" },
+        notify: { ...notify, value: false },
+        homePage: { ...homePage, value: "" },
+        email: { ...email, value: "" },
+      };
     },
-    elemChanged: function(event) {
+    elemChanged(event) {
       this.errors = omit(this.errors, event.target.name);
     },
   },
@@ -209,7 +252,6 @@ export default {
   height: 6em;
   width: 90%;
   resize: none;
-
 }
 button {
   width: 10em;
