@@ -7,8 +7,8 @@
           <TabShow
             :tab="tab"
             :active="activeTab === tab.name"
-            :onClick="setTabActive"
             :setContent="setContent"
+            @onClick="setTabActive"
           />
         </li>
       </ul>
@@ -40,17 +40,16 @@ export default {
     };
   },
   mounted: function() {
-    const subTab = get(this.tabs, "[0].subTabs.0", {});
-    this.activeTab = this.tabs[0].name;
-    this.content = subTab.content;
-    this.subTitle = subTab.name;
+    const firstTab = get(this.tabs, "[0]", {});
+    this.setTabActive(firstTab);
   },
   methods: {
     setTabActive: function(tab = {}) {
-      const subTab = get(tab, "subTabs.0", {});
-      this.activeTab = tab.name;
-      this.content = subTab.content;
-      this.subTitle = subTab.name;
+      if(this.activeTab != tab.name) {
+        const subTab = get(tab, "subTabs.0", {});
+        this.activeTab = tab.name;
+        this.setContent(subTab);
+      }
     },
     setContent: function(tab = {}) {
       this.content = tab.content;
