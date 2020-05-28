@@ -1,13 +1,13 @@
 <template>
-  <div class="tab" @click.stop="onClick(tab)">
+  <div class="tab" @click.stop="$emit('onClick', tab)">
     <div class="tab-name" :class="activeClass">{{ tab.name }}</div>
     <ul class="sub-tabs" v-if="active">
       <li v-for="subTab in subTabs" :key="subTab.name">
         <TabShow
           :tab="subTab"
           :active="activeChildTab === subTab.name"
-          :onClick="onSubTabClick"
           :setContent="setContent"
+          @onClick="onSubTabClick"
         />
       </li>
     </ul>
@@ -26,21 +26,15 @@ export default {
   props: ["tab", "active", "onClick", "setContent"],
   data: function() {
     return {
-      subTabs: this.tab.subTabs,
       activeChildTab: "",
     };
-  },
-  mounted: function() {
-    this.activeChildTab = get(this.subTabs, "[0].name", "");
-  },
-  updated: function() {
-    if (!this.active) {
-      this.activeChildTab = get(this.subTabs, "[0].name", "");
-    }
   },
   computed: {
     activeClass: function() {
       return this.active ? "active" : "";
+    },
+    subTabs: function() {
+      return this.tab.subTabs;
     }
   },
   methods: {
@@ -49,6 +43,19 @@ export default {
       this.setContent(tab);
     },
   },
+  watch: {
+    active: function(oldVal, newVal) {
+      if(oldVal && !newVal) {
+        this.activeChildTab = "";
+      }
+    }
+  },
+  updated: function() {
+    const { active, activeChildTab, subTabs } = this;
+    if(active && !activeChildTab && get(subTabs, "length", 0)) {
+      this.activeChildTab = get(subTabs, "[0].name", "");
+    }
+  }
 };
 </script>
 <style type="text/css" scoped>
