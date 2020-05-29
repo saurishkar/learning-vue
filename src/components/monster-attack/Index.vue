@@ -39,9 +39,10 @@ export default {
   },
   data() {
     return {
-      userHealth: 50,
+      userHealth: 100,
       monsterHealth: 100,
       started: false,
+      monsterAttackTimeout: null,
       getRandomFactor(max = 1) {
         return Math.floor(Math.random() * Math.floor(max)) / 100;
       },
@@ -58,6 +59,7 @@ export default {
   methods: {
     start() {
       this.started = true;
+      this.monsterAttackTimeout = setTimeout(this.damageUserHealth, 500);
     },
     attack() {
       this.damageMonsterHealth(10);
@@ -68,16 +70,37 @@ export default {
       }
     },
     heal() {
-      this.userHealth = this.userHealth * 1.1;
+      const newVal = this.userHealth * 1.1;
+      if (newVal > 100) {
+        this.userHealth = 100;
+      } else {
+        this.userHealth = newVal;
+      }
     },
     reset() {
       this.userHealth = 100;
       this.monsterHealth = 100;
       this.started = false;
+      clearTimeout(this.monsterAttackTimeout);
+    },
+    damageUserHealth() {
+      const newVal = this.userHealth * (1 - this.getRandomFactor(20));
+      if (newVal < 0) {
+        this.userHealth = 0;
+        clearTimeout(this.monsterAttackTimeout);
+      } else {
+        this.userHealth = newVal;
+        this.monsterAttackTimeout = setTimeout(this.damageUserHealth, 500);
+      }
     },
     damageMonsterHealth(maxPercent = 10) {
-      const randomFactor = this.getRandomFactor(maxPercent);
-      this.monsterHealth = this.monsterHealth * (1 - randomFactor);
+      const newVal =
+        this.monsterHealth * (1 - this.getRandomFactor(maxPercent));
+      if (newVal < 0) {
+        this.monsterHealth = 0;
+      } else {
+        this.monsterHealth = newVal;
+      }
     },
   },
 };
