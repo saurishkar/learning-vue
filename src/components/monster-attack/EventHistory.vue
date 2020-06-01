@@ -9,7 +9,9 @@
 <script type="text/javascript">
 export default {
   name: "EventHistory",
-  props: ["logs"],
+  props: {
+    logs: Array
+  },
 };
 </script>
 

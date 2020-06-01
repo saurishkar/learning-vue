@@ -11,6 +11,7 @@
         <Health :health="monsterHealth" key="monster" />
       </div>
     </div>
+    <h2 class="result" v-if="!!result">{{ result }}</h2>
     <div class="actions" v-if="!started" @click="start">
       <button class="start bg-primary">Start</button>
     </div>
@@ -26,7 +27,7 @@
       <button class="bg-blue" @click="healPlayer">Heal</button>
       <button class="bg-grey" @click="reset">Give up</button>
     </div>
-    <EventHistory :logs="eventHistory" v-if="started" />
+    <EventHistory :logs="eventHistory" />
   </div>
 </template>
 
@@ -38,7 +39,6 @@ const FACTOR_20 = 20;
 const FACTOR_10 = 10;
 const MONSTER = "Monster";
 const PLAYER = "Player";
-const MONSTER_ATTACK_TIME = 500;
 const MAX_HEALTH = 100;
 
 export default {
@@ -52,8 +52,8 @@ export default {
       userHealth: MAX_HEALTH,
       monsterHealth: MAX_HEALTH,
       started: false,
-      monsterAttackTimeout: null,
       eventHistory: [],
+      result: ""
     };
   },
   computed: {
@@ -64,11 +64,26 @@ export default {
       return false;
     },
   },
+  watch: {
+    userHealth() {
+      if (this.userHealth <= 0) {
+        this.endGame();
+      }
+    },
+    monsterHealth() {
+      if (this.monsterHealth <= 0) {
+        this.endGame();
+      }
+    },
+  },
   methods: {
     start() {
       this.started = true;
+      this.result = "";
+      this.userHealth = MAX_HEALTH;
+      this.monsterHealth = MAX_HEALTH;
+      this.eventHistory = [];
       this.logEvent("Game Started");
-      this.attackPlayer();
     },
     attackMonster() {
       this.damage({ attacker: PLAYER });
@@ -77,15 +92,7 @@ export default {
       this.damage({ attacker: PLAYER, special: true });
     },
     attackPlayer() {
-      if (this.monsterAttackTimeout || !this.started) {
-        clearTimeout(this.monsterAttackTimeout);
-      }
-      if (this.started) {
-        this.monsterAttackTimeout = setTimeout(
-          () => this.damage({ attacker: MONSTER }),
-          MONSTER_ATTACK_TIME
-        );
-      }
+      this.damage({ attacker: MONSTER });
     },
     healPlayer() {
       const healedValue = this.userHealth + FACTOR_10;
@@ -96,7 +103,6 @@ export default {
       const newHealth = this.userHealth - damageValue;
       this.logEvent(`Monster hits player for ${damageValue}`);
       this.userHealth = newHealth <= 0 ? 0 : newHealth;
-      this.attackPlayer();
     },
     damageMonsterHealth(damageValue = 0, hard = false) {
       const newHealth = this.monsterHealth - damageValue;
@@ -104,6 +110,7 @@ export default {
         `Player hits monster ${hard ? "hard" : ""} for ${damageValue}`
       );
       this.monsterHealth = newHealth <= 0 ? 0 : newHealth;
+      this.attackPlayer();
     },
     damage({ attacker = MONSTER, special = false }) {
       let damageValue = 0;
@@ -119,18 +126,23 @@ export default {
           break;
       }
     },
+    endGame() {
+      const { userHealth, monsterHealth } = this;
+      if (userHealth > monsterHealth) {
+        this.result = "Player wins";
+      } else {
+        this.result = "Monster wins";
+      }
+      this.reset();
+    },
     getRandomFactor(max = 1) {
-      return Math.floor(Math.random() * Math.floor(max));
+      return 1 + Math.floor(Math.random() * Math.floor(max));
     },
     logEvent(log = "") {
       this.eventHistory = [log, ...this.eventHistory];
     },
     reset() {
-      this.userHealth = MAX_HEALTH;
-      this.monsterHealth = MAX_HEALTH;
       this.started = false;
-      this.eventHistory = [];
-      clearTimeout(this.monsterAttackTimeout);
     },
   },
 };

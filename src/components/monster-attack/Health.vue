@@ -8,7 +8,9 @@
 <script type="text/javascript">
 export default {
   name: "Health",
-  props: ["health"],
+  props: {
+    health: Number
+  },
   computed: {
     bgColor() {
       if(this.health < 20) {
