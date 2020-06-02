@@ -3,6 +3,7 @@
   "examples": {
     "tabs": "/examples/tabs",
     "form": "/examples/form",
-    "todos": "/examples/todos"
+    "todos": "/examples/todos",
+    "monsterAttack": "/examples/monster-attack"
   }
 }
