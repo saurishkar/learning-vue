@@ -4,6 +4,7 @@
     "tabs": "/examples/tabs",
     "form": "/examples/form",
     "todos": "/examples/todos",
-    "monsterAttack": "/examples/monster-attack"
+    "monsterAttack": "/examples/monster-attack",
+    "customEvents": "/examples/custom-events"
   }
 }
