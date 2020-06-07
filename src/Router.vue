@@ -4,6 +4,7 @@ import TodosIndex from "./components/todos/Index";
 import RegistrationForm from "./components/form/Registration.vue";
 import Home from "./components/Home";
 import MonsterAttack from "@/components/monster-attack/Index.vue";
+import EmailSlots from "@/components/email-slots/Index";
 import NotFound from "./components/NotFound";
 import ROUTES from "./constants/routes.json";
 
@@ -12,7 +13,8 @@ const routeMapping = {
   [ROUTES.examples.tabs]: TabsIndex,
   [ROUTES.examples.todos]: TodosIndex,
   [ROUTES.examples.form]: RegistrationForm,
-  [ROUTES.examples.monsterAttack]: MonsterAttack
+  [ROUTES.examples.monsterAttack]: MonsterAttack,
+  [ROUTES.examples.emailSlots]: EmailSlots
 };
 
 export default {
