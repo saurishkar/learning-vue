@@ -20,6 +20,7 @@
 
 <script type="text/javascript">
 import omit from "lodash/omit";
+import debounce from "lodash/debounce";
 
 import ContactCreate from "./Create";
 import ContactShow from "./Show";
@@ -49,19 +50,16 @@ export default {
         ...this.contacts,
         [obj.id]: obj,
       };
-      this.resetSearch();
-      this.resetList();
     },
     handleSearchQuery(event) {
       this.searchQuery = event.target.value;
-      this.filterContacts(this.searchQuery);
     },
     filterContacts(query = "") {
       if (isEmpty(query)) {
         this.resetList();
       }
       const regExp = new RegExp(query, "gi");
-      const results = this.orderedContacts.filter((contact) => {
+      const results = Object.values(this.contacts).filter((contact) => {
         return regExp.test(contact.firstname) ||
           regExp.test(contact.lastname) ||
           regExp.test(contact.email)
@@ -69,20 +67,27 @@ export default {
       this.orderedContacts = results;
     },
     sortContacts(contacts = []) {
-      this.orderedContacts = contacts.sort((prev, next) =>
+      return contacts.sort((prev, next) =>
         prev.firstname.localeCompare(next.firstname) < 0 ? -1 : 1);
     },
     remove(obj = {}) {
       this.contacts = omit(this.contacts, obj.id);
-      this.sortContacts(Object.values(this.contacts));
     },
     resetSearch() {
       this.searchQuery = "";
     },
     resetList() {
-      this.sortContacts(Object.values(this.contacts));
+      this.orderedContacts = this.sortContacts(Object.values(this.contacts));
     }
   },
+  watch: {
+    searchQuery: debounce(function(newVal) {
+      this.filterContacts(newVal);
+    }, 200),
+    contacts() {
+      this.filterContacts(this.searchQuery);
+    }
+  }
 };
 </script>
 
