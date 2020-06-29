@@ -101,13 +101,10 @@
 
 <script type="text/javascript">
 import omit from "lodash/omit";
-import { validator } from "@/helpers/validate";
+import { validateEach } from "@/helpers/validate";
 
 const defaultFormObj = Object.freeze({
   value: "",
-  validate: {
-    presence: true,
-  },
 });
 
 export default {
@@ -118,50 +115,37 @@ export default {
       formValues: {
         loginId: { ...defaultFormObj },
         name: { ...defaultFormObj },
-        aboutMe: {
-          ...defaultFormObj,
-          validate: {
-            ...defaultFormObj.validate,
-            length: { max: 50 },
-          },
-        },
+        aboutMe: { ...defaultFormObj },
         timezone: {
           ...defaultFormObj,
           value: "GMT",
         },
+        notify: { ...defaultFormObj, value: false },
+        homePage: { ...defaultFormObj },
+        email: { ...defaultFormObj },
+      },
+      validations: {
+        loginId: { presence: true },
+        name: { presence: true },
+        aboutMe: {
+          presence: true,
+          length: { max: 100 },
+        },
+        timezone: { presence: true },
         notify: {
-          ...defaultFormObj,
-          value: false,
+          presence: true,
         },
-        homePage: {
-          ...defaultFormObj,
-          validate: {
-            ...defaultFormObj.validate,
-            url: true,
-          },
-        },
-        email: {
-          ...defaultFormObj,
-          validate: {
-            ...defaultFormObj.validate,
-            email: true,
-          },
-        },
+        homePage: { presence: true, url: true },
+        email: { presence: true, email: true },
       },
     };
   },
   methods: {
     validate() {
-      let errors = {};
-
-      for (let key in this.formValues) {
-        const err = validator(this.formValues[key]);
-        if (err.length > 0) {
-          errors[key] = err.shift();
-        }
-      }
-      if (Object.keys(errors).length) {
-        return (this.errors = { ...errors });
+      const errors = validateEach(this.formValues, this.validations);
+      if(Object.keys(errors).length) {
+        this.errors = { ...errors };
+        return;
       }
       return this.submitForm();
     },
@@ -174,7 +158,7 @@ export default {
         timezone,
         notify,
         homePage,
-        aboutMe
+        aboutMe,
       } = this.formValues;
       this.formValues = {
         loginId: { ...loginId, value: "" },

@@ -26,7 +26,7 @@ const ValidateHelper = {
       )
     );
   },
-  validator: function(formObj = {}) {
+  validator: function(formObj = {}) { // Will Be deprecated in the future
     const { value = "", validate: validationObj = {} } = formObj;
     let errors = [];
     for (let key in validationObj) {
@@ -56,6 +56,45 @@ const ValidateHelper = {
     }
     return errors;
   },
+  validatorNew: function(value = "", validationObj = {}) {
+    let errors = [];
+    for (let key in validationObj) {
+      let lengthObj = get(validationObj, key, { max: 0, min: 0 });
+      switch (key) {
+        case "presence":
+          isEmpty(value) ? errors.push("Required") : "";
+          break;
+
+        case "length":
+          !maxStrLengthN(value, lengthObj.max)
+            ? errors.push(`Max ${lengthObj.max} characters`)
+            : "";
+          !minStrLengthN(value, lengthObj.min)
+            ? errors.push(`Min ${lengthObj.min} characters`)
+            : "";
+          break;
+
+        case "email":
+          !isEmail(value) ? errors.push("Invalid Email") : "";
+          break;
+
+        case "url":
+          !isUrl(value) ? errors.push("Invalid Url") : "";
+          break;
+      }
+    }
+    return errors;
+  },
+  validateEach: function(formValues = {}, validations = {}) {
+    let errors = {};
+    for (let key in formValues) {
+      const err = validatorNew(formValues[key].value, validations[key]);
+      if (err.length > 0) {
+        errors[key] = err.shift();
+      }
+    }
+    return errors;
+  }
 };
 
 export const {
@@ -63,6 +102,8 @@ export const {
   isEmail,
   isUrl,
   validator,
+  validatorNew,
+  validateEach,
   maxStrLengthN,
   minStrLengthN,
 } = ValidateHelper;
