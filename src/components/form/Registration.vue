@@ -11,7 +11,7 @@
             name="loginId"
             id="loginId"
             placeholder="Your login id"
-            @change="elemChanged"
+            @input="elemChanged"
           />
           <div class="error" v-if="errors.loginId">{{ errors.loginId }}</div>
         </div>
@@ -23,7 +23,7 @@
             id="email"
             placeholder="johndoe@example.com"
             name="email"
-            @change="elemChanged"
+            @input="elemChanged"
           />
           <div class="error" v-if="errors.email">{{ errors.email }}</div>
         </div>
@@ -35,7 +35,7 @@
             id="name"
             placeholder="John Doe"
             name="name"
-            @change="elemChanged"
+            @input="elemChanged"
           />
           <div class="error" v-if="errors.name">{{ errors.name }}</div>
         </div>
@@ -59,7 +59,7 @@
             name="homePage"
             id="homePage"
             placeholder="www.google.com"
-            @change="elemChanged"
+            @input="elemChanged"
           />
           <div class="error" v-if="errors.homePage">{{ errors.homePage }}</div>
         </div>
@@ -69,7 +69,7 @@
             v-model="formValues.aboutMe.value"
             name="aboutMe"
             id="aboutMe"
-            @change="elemChanged"
+            @input="elemChanged"
           />
           <div class="error" v-if="errors.aboutMe">{{ errors.aboutMe }}</div>
         </div>
