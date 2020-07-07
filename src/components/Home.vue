@@ -7,6 +7,7 @@
       <li><a href="/examples/form">Form Example</a></li>
       <li><a href="/examples/todos">Todos List Example</a></li>
       <li><a href="/examples/monster-attack">Monster Attack Example</a></li>
+      <li><a href="/examples/custom-events">Custom Events Example</a></li>
       <li><a href="/examples/email-slots">Email Slots</a></li>
     </ul>
   </div>
