@@ -22,9 +22,9 @@
 import omit from "lodash/omit";
 import debounce from "lodash/debounce";
 
-import ContactCreate from "./Create";
-import ContactShow from "./Show";
-import Search from "./Search";
+import ContactCreate from "@/components/contact-manager/Create";
+import ContactShow from "@/components/contact-manager/Show";
+import Search from "@/components/contact-manager/Search";
 
 import { uniqIdGenerator } from "@/helpers/resource";
 import { isEmpty } from "@/helpers/validate";

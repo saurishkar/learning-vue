@@ -59,7 +59,7 @@
 
 <script type="text/javascript">
 import omit from "lodash/omit";
-import { validatorNew } from "@/helpers/validate";
+import { validateEach } from "@/helpers/validate";
 
 export default {
   name: "ContactCreate",
@@ -89,13 +89,7 @@ export default {
   },
   methods: {
     validate() {
-      let errors = {};
-      for (let key in this.formValues) {
-        const err = validatorNew(this.formValues[key].value, this.validations[key]);
-        if (err.length > 0) {
-          errors[key] = err.shift();
-        }
-      }
+      const errors = validateEach(this.formValues, this.validations);
       if (Object.keys(errors).length) {
         return (this.errors = { ...errors });
       }
