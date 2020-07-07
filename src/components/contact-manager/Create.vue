@@ -12,7 +12,7 @@
                 id="firstname"
                 placeholder="John"
                 class="form-control"
-                @change="elemChanged"
+                @input="elemChanged"
                 v-model="formValues.firstname.value"
               />
               <div class="error" v-if="errors.firstname">
@@ -27,7 +27,7 @@
                 id="lastname"
                 placeholder="Doe"
                 class="form-control"
-                @change="elemChanged"
+                @input="elemChanged"
                 v-model="formValues.lastname.value"
               />
               <div class="error" v-if="errors.lastname">
@@ -44,7 +44,7 @@
                 id="email"
                 placeholder="johndoe@example.com"
                 class="form-control"
-                @change="elemChanged"
+                @input="elemChanged"
                 v-model="formValues.email.value"
               />
               <div class="error" v-if="errors.email">{{ errors.email }}</div>
@@ -63,22 +63,9 @@ import { validateEach } from "@/helpers/validate";
 
 export default {
   name: "ContactCreate",
-  props: {
-    create: Function
-  },
   data() {
     return {
-      formValues: {
-        firstname: {
-          value: "",
-        },
-        lastname: {
-          value: "",
-        },
-        email: {
-          value: "",
-        },
-      },
+      formValues: { ...this.getDefaultFormValues() },
       errors: {},
       validations: {
         firstname: { presence: true },
@@ -88,6 +75,34 @@ export default {
     };
   },
   methods: {
+    getDefaultFormValues() {
+      return {
+        firstname: {
+          value: "",
+        },
+        lastname: {
+          value: "",
+        },
+        email: {
+          value: "",
+        },
+      }
+    },
+    elemChanged(event) {
+      this.errors = omit(this.errors, event.target.name);
+    },
+    resetForm() {
+      this.formValues = { ...this.getDefaultFormValues() };
+      this.errors = {};
+    },
+    submitForm() {
+      let contactObj = {};
+      Object.keys(this.formValues).map(
+        (key) => (contactObj[key] = this.formValues[key].value)
+      );
+      this.$emit("create", contactObj);
+      this.resetForm();
+    },
     validate() {
       const errors = validateEach(this.formValues, this.validations);
       if (Object.keys(errors).length) {
@@ -95,22 +110,6 @@ export default {
       }
       return this.submitForm();
     },
-    elemChanged(event) {
-      this.errors = omit(this.errors, event.target.name);
-    },
-    submitForm() {
-      let contactObj = {};
-      Object.keys(this.formValues).map(
-        (key) => (contactObj[key] = this.formValues[key].value)
-      );
-      this.create(contactObj);
-      this.resetForm();
-    },
-    resetForm() {
-      Object.keys(this.formValues).map(
-        (key) =>  this.formValues[key].value = ""
-      );
-    }
   },
 };
 </script>

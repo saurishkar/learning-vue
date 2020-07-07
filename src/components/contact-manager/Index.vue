@@ -5,7 +5,7 @@
       <Search @change="handleSearchQuery" :query="searchQuery" />
     </div>
     <div class="body">
-      <ContactCreate :create="create" />
+      <ContactCreate @create="create" />
       <div class="contact-list">
         <ContactShow
           v-for="contact in orderedContacts"
