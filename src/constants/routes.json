@@ -5,7 +5,8 @@
     "form": "/examples/form",
     "todos": "/examples/todos",
     "monsterAttack": "/examples/monster-attack",
-    "customEvents": "/examples/custom-events",
-    "emailSlots": "/examples/email-slots"
+    "emailSlots": "/examples/email-slots",
+    "contactManager": "/examples/contact-manager",
+    "customEvents": "/examples/custom-events"
   }
 }

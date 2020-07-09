@@ -9,6 +9,7 @@
       <li><a href="/examples/monster-attack">Monster Attack Example</a></li>
       <li><a href="/examples/custom-events">Custom Events Example</a></li>
       <li><a href="/examples/email-slots">Email Slots</a></li>
+      <li><a href="/examples/contact-manager">Contact Manager</a></li>
     </ul>
   </div>
 </template>
