@@ -4,6 +4,7 @@ import TodosIndex from "./components/todos/Index";
 import RegistrationForm from "./components/form/Registration.vue";
 import Home from "./components/Home";
 import MonsterAttack from "@/components/monster-attack/Index.vue";
+import Ecommerce from "@/components/ecommerce/Index";
 import EmailSlots from "@/components/email-slots/Index";
 import ContactManager from "@/components/contact-manager/Index";
 import NotFound from "./components/NotFound";
@@ -16,7 +17,8 @@ const routeMapping = {
   [ROUTES.examples.form]: RegistrationForm,
   [ROUTES.examples.monsterAttack]: MonsterAttack,
   [ROUTES.examples.emailSlots]: EmailSlots,
-  [ROUTES.examples.contactManager]: ContactManager
+  [ROUTES.examples.contactManager]: ContactManager,
+  [ROUTES.examples.customEvents]: Ecommerce,
 };
 
 export default {
