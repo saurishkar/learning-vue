@@ -10,6 +10,7 @@
       <li><a href="/examples/custom-events">Custom Events Example</a></li>
       <li><a href="/examples/email-slots">Email Slots</a></li>
       <li><a href="/examples/contact-manager">Contact Manager</a></li>
+      <li><a href="/examples/arithmetic-quiz">Timed Arithmetic Quiz</a></li>
     </ul>
   </div>
 </template>
@@ -28,9 +29,15 @@ export default {
 <style type="text/css" scoped>
   ul {
     list-style-type: none;
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    margin: 3em auto;
+    justify-content: center;
   }
   li {
-    display: inline-block;
+    flex-basis: 15em;
     padding: 1em;
+    margin: 0 2em;
   }
 </style>
