@@ -64,8 +64,8 @@ export default {
   },
   methods: {
     generateQuestion() {
-      const idx = generateRandomIndex(3);
-      const operand1 = generateRandomNumber(
+      const idx = generateRandomIndex(4);
+      const operand1 = 10 + generateRandomNumber(
         this.MAX_NUMBER,
         this.MAX_DECIMAL_PLACES
       );
