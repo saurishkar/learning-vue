@@ -53,7 +53,7 @@ export default {
       OPERATORS: ["+", "-", "*", "/"],
       NUMBER_OF_QUESTIONS: 10,
       TIMER_LIMIT: 10,
-      MAX_NUMBER: 20,
+      MAX_NUMBER: 50,
       MAX_DECIMAL_PLACES: 0,
       counter: 0,
       questions: {},
@@ -70,7 +70,7 @@ export default {
         this.MAX_DECIMAL_PLACES
       );
       const operand2 =
-        1 + generateRandomNumber(this.MAX_NUMBER, this.MAX_DECIMAL_PLACES);
+        10 + generateRandomNumber(this.MAX_NUMBER, this.MAX_DECIMAL_PLACES);
       const expression = `${operand1} ${this.OPERATORS[idx]} ${operand2}`;
       return {
         id: ++this.counter,
