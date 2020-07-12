@@ -52,7 +52,7 @@ export default {
     return {
       OPERATORS: ["+", "-", "*", "/"],
       NUMBER_OF_QUESTIONS: 10,
-      TIMER_LIMIT: 10,
+      TIMER_LIMIT: 5,
       MAX_NUMBER: 50,
       MAX_DECIMAL_PLACES: 0,
       counter: 0,
