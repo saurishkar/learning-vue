@@ -4,9 +4,9 @@
     <div class="instructions" v-if="counter == 0 && !showResult">
       <p>
         You will be asked a set of
-        <b class="text-primary">{{ this.NUMBER_OF_QUESTIONS }} questions</b>.
+        <b class="text-primary">{{ NUMBER_OF_QUESTIONS }} questions</b>.
         Each question will have a time limit to answer within
-        <b class="text-danger">{{ this.TIMER_LIMIT }} seconds</b>.
+        <b class="text-danger">{{ TIMER_LIMIT }} seconds</b>.
       </p>
       <p>
         At the end of the test, you will be able to see the final score
@@ -51,10 +51,10 @@ export default {
   data() {
     return {
       OPERATORS: ["+", "-", "*", "/"],
-      NUMBER_OF_QUESTIONS: 10,
-      TIMER_LIMIT: 5,
-      MAX_NUMBER: 50,
-      MAX_DECIMAL_PLACES: 0,
+      NUMBER_OF_QUESTIONS: 20,
+      TIMER_LIMIT: 20,
+      MAX_NUMBER: 20,
+      MAX_DECIMAL_PLACES: 2,
       counter: 0,
       questions: {},
       responses: {},
@@ -63,14 +63,14 @@ export default {
     };
   },
   methods: {
-    generateQuestion() {
+    getQuestion() {
       const idx = generateRandomIndex(4);
-      const operand1 = 10 + generateRandomNumber(
+      const operand1 = generateRandomNumber(
         this.MAX_NUMBER,
         this.MAX_DECIMAL_PLACES
       );
       const operand2 =
-        10 + generateRandomNumber(this.MAX_NUMBER, this.MAX_DECIMAL_PLACES);
+        1 + generateRandomNumber(this.MAX_NUMBER, this.MAX_DECIMAL_PLACES);
       const expression = `${operand1} ${this.OPERATORS[idx]} ${operand2}`;
       return {
         id: ++this.counter,
@@ -79,7 +79,7 @@ export default {
       };
     },
     setQuestion() {
-      const question = this.generateQuestion();
+      const question = this.getQuestion();
       this.questions = {
         ...this.questions,
         [question.id]: question,

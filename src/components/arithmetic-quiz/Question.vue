@@ -3,22 +3,26 @@
     <h3 class="mb-3 title">
       Question #<slot name="title" :index="question.id"></slot>
     </h3>
-    <Timer :count="timeLeft" v-if="timeLeft > 0" class="mb-5" />
+    <Timer
+      :countdown="timeLimit"
+      :started="timerStarted"
+      :onCountdownEnd="submitResponse"
+      class="mb-5"
+    />
     <h5 class="description mb-3">
       <slot name="description" :expression="question.expression"></slot>
     </h5>
-    <div class="answer-container container">
+    <div class="answer-container container" :key="question.id">
       <input
-        type="text"
+        type="number"
         v-model="answer"
+        autofocus="true"
         class="answer form-control"
         placeholder="Your Answer"
-        :disabled="!!(timeLeft == 0)"
       />
     </div>
     <button
       class="btn btn-success mt-2"
-      :disabled="!(answer || timeLeft == 0)"
       @click="submitResponse"
     >
       Next
@@ -37,20 +41,18 @@ export default {
   props: {
     question: Object,
     submit: Function,
-    timeLimit: Number
+    timeLimit: Number,
   },
   data() {
     return {
-      timeLeft: this.timeLimit,
       answer: "",
-      timerInstance: null,
+      timerStarted: false,
     };
   },
   mounted() {
-    this.setTimer();
+    this.timerStarted = true;
   },
   beforeDestroy() {
-    this.resetTimer();
     this.answer = "";
   },
   methods: {
@@ -60,28 +62,13 @@ export default {
         response: this.answer,
       });
     },
-    resetTimer() {
-      clearInterval(this.timerInstance);
-      this.timerInstance = null;
-    },
-    setTimer() {
-      this.timerInstance = setInterval(this.updateTimer, 1000);
-    },
-    updateTimer(val = -1) {
-      this.timeLeft += val;
-      if (this.timeLeft <= 0) {
-        this.resetTimer();
-        this.submitResponse();
-        return;
-      }
-    },
   },
 };
 </script>
 
 <style type="text/css" scoped>
-  .answer {
-    max-width: 15em;
-    margin: auto;
-  }
+.answer {
+  max-width: 15em;
+  margin: auto;
+}
 </style>
