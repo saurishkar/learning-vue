@@ -8,6 +8,7 @@
     "emailSlots": "/examples/email-slots",
     "contactManager": "/examples/contact-manager",
     "customEvents": "/examples/custom-events",
-    "arithmeticQuiz": "/examples/arithmetic-quiz"
+    "arithmeticQuiz": "/examples/arithmetic-quiz",
+    "arithmeticQuizCustom": "/examples/arithmetic-quiz-custom"
   }
 }

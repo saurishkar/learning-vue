@@ -8,6 +8,7 @@ import Ecommerce from "@/components/ecommerce/Index";
 import EmailSlots from "@/components/email-slots/Index";
 import ContactManager from "@/components/contact-manager/Index";
 import ArithmeticQuiz from "@/components/arithmetic-quiz/Index";
+import ArithmeticQuizCustom from "@/components/arithmetic-quiz-custom/Index";
 import NotFound from "./components/NotFound";
 import ROUTES from "./constants/routes.json";
 
@@ -20,7 +21,8 @@ const routeMapping = {
   [ROUTES.examples.emailSlots]: EmailSlots,
   [ROUTES.examples.contactManager]: ContactManager,
   [ROUTES.examples.customEvents]: Ecommerce,
-  [ROUTES.examples.arithmeticQuiz]: ArithmeticQuiz
+  [ROUTES.examples.arithmeticQuiz]: ArithmeticQuiz,
+  [ROUTES.examples.arithmeticQuizCustom]: ArithmeticQuizCustom
 };
 
 export default {

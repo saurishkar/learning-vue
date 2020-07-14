@@ -11,6 +11,7 @@
       <li><a href="/examples/email-slots">Email Slots</a></li>
       <li><a href="/examples/contact-manager">Contact Manager</a></li>
       <li><a href="/examples/arithmetic-quiz">Timed Arithmetic Quiz</a></li>
+      <li><a href="/examples/arithmetic-quiz-custom">Customised Arithmetic Quiz</a></li>
     </ul>
   </div>
 </template>
@@ -30,10 +31,10 @@ export default {
   ul {
     list-style-type: none;
     display: flex;
-    width: 100%;
+    width: 90%;
     flex-wrap: wrap;
     margin: 3em auto;
-    justify-content: center;
+    /*justify-content: center;*/
   }
   li {
     flex-basis: 15em;
