@@ -1,5 +1,5 @@
 <template>
-  <div class="arithmetic-quiz-generator container">
+  <div class="arithmetic-quiz-generator px-5">
     <h1>
       Customize your own arithmetic quiz
     </h1>
@@ -12,6 +12,7 @@
             class="form-control"
             :min="1"
             name="minOperand"
+            :value="quizFormValues.minOperand"
             @input="handleInputChange"
           />
         </div>
@@ -22,6 +23,7 @@
             class="form-control"
             :min="1"
             name="maxOperand"
+            :value="quizFormValues.maxOperand"
             @input="handleInputChange"
           />
         </div>
@@ -32,6 +34,7 @@
             class="form-control"
             :min="1"
             name="questionCount"
+            :value="quizFormValues.questionCount"
             @input="handleInputChange"
           />
         </div>
@@ -42,6 +45,7 @@
             class="form-control"
             :min="10"
             name="timerLimit"
+            :value="quizFormValues.timerLimit"
             @input="handleInputChange"
           />
         </div>
@@ -55,7 +59,9 @@
                 type="checkbox"
                 :name="operator.key"
                 :id="operator.key"
-                value="operator.sym"
+                :value="operator.sym"
+                :checked="quizFormValues.operators[operator.key]"
+                @input="handleCheckboxChange"
               />
               <label :for="operator.key">{{ operator.sym }}</label>
             </li>
@@ -66,21 +72,17 @@
         </div>
       </div>
     </form>
-    <div class="quiz-list-container container">
+    <div class="quiz-list-container">
       <Quiz
-        v-for="quizIdx in quizList"
-        :key="quizIdx"
-        :minOperand="minOperand"
-        :maxOperand="maxOperand"
-        :questionCount="questionCount"
-        :timerLimit="timerLimit"
+        v-for="quiz in quizList"
+        :key="quiz.id"
+        :config="quiz"
       />
     </div>
   </div>
 </template>
 
 <script type="text/javascript">
-import range from "lodash/range";
 import Quiz from "@/components/arithmetic-quiz-custom/Quiz";
 
 export default {
@@ -108,26 +110,43 @@ export default {
           key: "divide",
         },
       },
-      count: 0,
+      quizFormValues: {
+        minOperand: 1,
+        maxOperand: 1,
+        questionCount: 1,
+        timerLimit: 1,
+        operators: {
+          "+": false,
+          "-": false,
+          "*": false,
+          "/": false
+        }
+      },
+      quizList: [],
     };
   },
-  computed: {
-    quizList() {
-      return range(0, this.count);
-    },
-  },
   methods: {
-    generateQuiz() {},
-    handleInputChange(event) {
-      this[event.target.name] = event.target.value;
+    generateQuiz() {
+      const quizId = this.quizList.length + 1;
+      this.quizList = [ ...this.quizList, { id: quizId, ...this.quizFormValues }];
     },
+    handleInputChange(event) {
+      this.quizFormValues[event.target.name] = parseInt(event.target.value);
+    },
+    handleCheckboxChange(event) {
+      this.quizFormValues.operators[event.target.value] = event.target.checked;
+      console.log(this.quizFormValues);
+    },
+    resetFields() {
+
+    }
   },
 };
 </script>
 
 <style type="text/css" scoped>
 .custom-quiz-form {
-  width: 80%;
+  width: 100%;
   text-align: left;
 }
 .operator-list {
@@ -148,5 +167,11 @@ export default {
 .btn {
   position: relative;
   top: 1em;
+}
+.quiz-list-container {
+  justify-content: left;
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 100%;
 }
 </style>

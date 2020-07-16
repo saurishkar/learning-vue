@@ -1,8 +1,12 @@
 <template>
   <div class="arithmetic-quiz-container container">
-    <div class="question-block" v-if="counter > 0 && !showResult">
+    <h2 class="quiz-header mb-3 py-2 row">
+      <div class="col-md-6">Quiz #{{ config.id }}</div>
+      <div class="col-md-6">Score: <b>{{ score }}</b></div>
+    </h2>
+    <div class="question-block" v-if="!showResult">
       <Question
-        :timeLimit="timerLimit"
+        :timeLimit="config.timerLimit"
         :question="this.questions[this.counter]"
         @submit="submitQuestionAndProceed"
         :key="this.questions[this.counter].id"
@@ -17,7 +21,6 @@
       v-if="showResult"
       :questions="questions"
       :responses="responses"
-      :score="score"
     />
   </div>
 </template>
@@ -35,19 +38,11 @@ export default {
     Result,
   },
   props: {
-    timerLimit: Number,
-    maxOperand: Number,
-    minOperand: Number,
-    questionCount: Number,
-    operators: Array
+    config: Object
   },
   data() {
     return {
-      // OPERATORS: ["+", "-", "*", "/"],
-      // NUMBER_OF_QUESTIONS: 20,
-      // TIMER_LIMIT: 20,
-      // MAX_NUMBER: 20,
-      MAX_DECIMAL_PLACES: 2,
+      MAX_DECIMAL_PLACES: 0,
       counter: 0,
       questions: {},
       responses: {},
@@ -55,16 +50,21 @@ export default {
       showResult: false,
     };
   },
+  beforeMount() {
+    this.setQuestion();
+  },
   methods: {
     getQuestion() {
-      const idx = generateRandomIndex(4);
-      const operand1 = this.minOperand + generateRandomNumber(
-        this.maxOperand,
+      const { minOperand, maxOperand, operators } = this.config;
+      const validOperators = Object.keys(operators).filter((key) => operators[key]);
+      const idx = generateRandomIndex(validOperators.length);
+      const operand1 = minOperand + generateRandomNumber(
+        maxOperand,
         this.MAX_DECIMAL_PLACES
       );
       const operand2 =
-        1 + this.minOperand + generateRandomNumber(this.maxOperand, this.MAX_DECIMAL_PLACES);
-      const expression = `${operand1} ${this.operators[idx]} ${operand2}`;
+        1 + minOperand + generateRandomNumber(maxOperand, this.MAX_DECIMAL_PLACES);
+      const expression = `${operand1} ${validOperators[idx]} ${operand2}`;
       return {
         id: ++this.counter,
         expression,
@@ -79,19 +79,33 @@ export default {
       };
     },
     submitQuestionAndProceed({ questionId, response }) {
+      const { questions, counter, config: { questionCount }, setQuestion } = this;
       this.responses = {
         ...this.responses,
         [questionId]: response,
       };
-      if (response == this.questions[questionId].answer) {
+      if (response == questions[questionId].answer) {
         this.score++;
       }
-      if (this.counter >= this.questionCount) {
+      if (counter >= questionCount) {
         this.showResult = true;
         return;
       }
-      this.setQuestion();
+      setQuestion();
     },
   },
 };
 </script>
+
+<style type="text/css" scoped>
+  .arithmetic-quiz-container {
+    border: 1px solid black;
+    max-width: 32%;
+    margin: 1em 0.5em 1em 0;
+    padding-bottom: 2em;
+  }
+  .quiz-header {
+    background-color: #900C3F;
+    color: white;
+  }
+</style>

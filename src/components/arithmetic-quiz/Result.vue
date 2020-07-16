@@ -1,10 +1,9 @@
 <template>
-  <div class="result-container container">
-    <h1 class="mb-4">Score: <b class="text-primary">{{ score }}</b></h1>
+  <div class="result-container">
     <table class="table">
       <thead class="alert alert-primary">
         <th>ID</th>
-        <th>Question</th>
+        <th style="width: 50%">Question</th>
         <th>Correct Answer</th>
         <th>Your Response</th>
       </thead>
@@ -28,7 +27,6 @@
 export default {
   name: "Result",
   props: {
-    score: Number,
     questions: Object,
     responses: Object,
   },
