@@ -7,7 +7,6 @@ const ResourceHelper = {
   },
   generateRandomNumber(limit = 1, decimalPlaces = 2) {
     const num = parseFloat((Math.random() * limit).toFixed(decimalPlaces));
-    console.log(limit, decimalPlaces, num);
     return num;
   }
 }

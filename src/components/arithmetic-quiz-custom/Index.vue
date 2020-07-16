@@ -5,47 +5,18 @@
     </h1>
     <form class="custom-quiz-form mt-5" @submit.prevent="generateQuiz">
       <div class="row">
-        <div class="col-md-3 form-group">
-          <label>Operand min limit</label>
+        <div
+          class="col-md-3 form-group"
+          v-for="formField in formFields"
+          :key="formField.name"
+        >
+          <label>{{ formField.label }}</label>
           <input
             type="number"
             class="form-control"
-            :min="1"
-            name="minOperand"
-            :value="quizFormValues.minOperand"
-            @input="handleInputChange"
-          />
-        </div>
-        <div class="col-md-3 form-group">
-          <label>Operand max limit</label>
-          <input
-            type="number"
-            class="form-control"
-            :min="1"
-            name="maxOperand"
-            :value="quizFormValues.maxOperand"
-            @input="handleInputChange"
-          />
-        </div>
-        <div class="col-md-3 form-group">
-          <label>Number of questions</label>
-          <input
-            type="number"
-            class="form-control"
-            :min="1"
-            name="questionCount"
-            :value="quizFormValues.questionCount"
-            @input="handleInputChange"
-          />
-        </div>
-        <div class=" col-md-3 form-group">
-          <label>Timer per question</label>
-          <input
-            type="number"
-            class="form-control"
-            :min="10"
-            name="timerLimit"
-            :value="quizFormValues.timerLimit"
+            :min="formField.min"
+            :name="formField.name"
+            :value="quizConfig[formField.name]"
             @input="handleInputChange"
           />
         </div>
@@ -54,16 +25,16 @@
         <div class="col-md-8">
           <label>Select operators to be included</label>
           <ul class="operator-list">
-            <li v-for="operator in operators" :key="operator.key">
+            <li v-for="operator in operators" :key="operator">
               <input
                 type="checkbox"
-                :name="operator.key"
-                :id="operator.key"
-                :value="operator.sym"
-                :checked="quizFormValues.operators[operator.key]"
+                :name="operator"
+                :id="operator"
+                :value="operator"
+                :checked="quizConfig.operators[operator]"
                 @input="handleCheckboxChange"
               />
-              <label :for="operator.key">{{ operator.sym }}</label>
+              <label :for="operator">{{ operator }}</label>
             </li>
           </ul>
         </div>
@@ -73,17 +44,21 @@
       </div>
     </form>
     <div class="quiz-list-container">
-      <Quiz
-        v-for="quiz in quizList"
-        :key="quiz.id"
-        :config="quiz"
-      />
+      <Quiz v-for="quiz in quizList" :key="quiz.id" :config="quiz" />
     </div>
   </div>
 </template>
 
 <script type="text/javascript">
 import Quiz from "@/components/arithmetic-quiz-custom/Quiz";
+
+const defaultValues = Object.freeze({
+  minOperand: 1,
+  maxOperand: 1,
+  questionCount: 1,
+  timerLimit: 1,
+  operators: Object.freeze({ "+": false, "-": false, "*": false, "/": false }),
+});
 
 export default {
   name: "Index",
@@ -92,54 +67,49 @@ export default {
   },
   data() {
     return {
-      operators: {
-        plus: {
-          sym: "+",
-          key: "plus",
+      operators: [ ...Object.keys(defaultValues.operators) ],
+      formFields: [
+        {
+          name: "minOperand",
+          label: "Operand min limit",
+          min: 1,
         },
-        minus: {
-          sym: "-",
-          key: "minus",
+        {
+          name: "maxOperand",
+          label: "Operand max limit",
+          min: 1,
         },
-        multiply: {
-          sym: "*",
-          key: "multiply",
+        {
+          name: "questionCount",
+          label: "Number of questions",
+          min: 1,
         },
-        divide: {
-          sym: "/",
-          key: "divide",
+        {
+          name: "timerLimit",
+          label: "Time per question",
+          min: 10,
         },
-      },
-      quizFormValues: {
-        minOperand: 1,
-        maxOperand: 1,
-        questionCount: 1,
-        timerLimit: 1,
-        operators: {
-          "+": false,
-          "-": false,
-          "*": false,
-          "/": false
-        }
-      },
+      ],
+      quizConfig: { ...defaultValues },
       quizList: [],
     };
   },
   methods: {
     generateQuiz() {
       const quizId = this.quizList.length + 1;
-      this.quizList = [ ...this.quizList, { id: quizId, ...this.quizFormValues }];
+      this.quizList = [...this.quizList, { id: quizId, ...this.quizConfig }];
+      this.resetFields();
     },
     handleInputChange(event) {
-      this.quizFormValues[event.target.name] = parseInt(event.target.value);
+      this.quizConfig[event.target.name] = parseInt(event.target.value);
     },
     handleCheckboxChange(event) {
-      this.quizFormValues.operators[event.target.value] = event.target.checked;
-      console.log(this.quizFormValues);
+      this.quizConfig.operators[event.target.value] = event.target.checked;
     },
     resetFields() {
-
-    }
+      this.quizConfig = defaultValues;
+      console.log(this.quizConfig);
+    },
   },
 };
 </script>
