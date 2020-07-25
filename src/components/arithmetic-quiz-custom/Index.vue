@@ -4,6 +4,13 @@
       Customize your own arithmetic quiz
     </h1>
     <form class="custom-quiz-form mt-5" @submit.prevent="generateQuiz">
+      <div class="errors">
+        <div
+          class="error alert alert-danger"
+          v-for="error in configErrors"
+          :key="error"
+        >{{ error }}</div>
+      </div>
       <div class="row">
         <div
           class="col-md-3 form-group"
@@ -25,16 +32,16 @@
         <div class="col-md-8">
           <label>Select operators to be included</label>
           <ul class="operator-list">
-            <li v-for="operator in operators" :key="operator">
+            <li v-for="operator in quizConfig.operators" :key="operator.id">
               <input
                 type="checkbox"
                 :name="operator"
-                :id="operator"
-                :value="operator"
-                :checked="quizConfig.operators[operator]"
+                :id="operator.id"
+                :value="operator.id"
+                :checked="operator.checked"
                 @input="handleCheckboxChange"
               />
-              <label :for="operator">{{ operator }}</label>
+              <label :for="operator.id">{{ operator.title }}</label>
             </li>
           </ul>
         </div>
@@ -43,21 +50,33 @@
         </div>
       </div>
     </form>
-    <div class="quiz-list-container">
-      <Quiz v-for="quiz in quizList" :key="quiz.id" :config="quiz" />
+    <div class="quiz-list-container row">
+      <div class="quiz col-md-4" v-for="quiz in quizList" :key="quiz.id">
+        <Quiz :config="quiz" />
+      </div>
     </div>
   </div>
 </template>
 
 <script type="text/javascript">
-import Quiz from "@/components/arithmetic-quiz-custom/Quiz";
+import omit from "lodash/omit";
+import forIn from "lodash/forIn";
+
+import Quiz from "@/components/arithmetic-quiz/Quiz";
+
+import { operators as arithOps } from "@/constants/defaults";
 
 const defaultValues = Object.freeze({
-  minOperand: 1,
-  maxOperand: 1,
-  questionCount: 1,
-  timerLimit: 1,
-  operators: Object.freeze({ "+": false, "-": false, "*": false, "/": false }),
+  minOperand: 10,
+  maxOperand: 20,
+  questionCount: 5,
+  timerLimit: 10,
+  operators: Object.values(arithOps).reduce((acc, op) => {
+    return { ...acc, [op.id]: {
+      ...op,
+      checked: false
+    }};
+  }, {})
 });
 
 export default {
@@ -67,22 +86,21 @@ export default {
   },
   data() {
     return {
-      operators: [ ...Object.keys(defaultValues.operators) ],
       formFields: [
         {
           name: "minOperand",
           label: "Operand min limit",
-          min: 1,
+          min: 10,
         },
         {
           name: "maxOperand",
           label: "Operand max limit",
-          min: 1,
+          min: 10,
         },
         {
           name: "questionCount",
           label: "Number of questions",
-          min: 1,
+          min: 5,
         },
         {
           name: "timerLimit",
@@ -92,23 +110,43 @@ export default {
       ],
       quizConfig: { ...defaultValues },
       quizList: [],
+      configErrors: []
     };
   },
   methods: {
+    areFormErrorsPresent() {
+      let formErrors = [];
+      const operatorSelected = Object.values(this.quizConfig.operators).some((op) => op.checked);
+      forIn(omit(this.quizConfig, ["operators"]), (value, key) => {
+        if(typeof value != "number") {
+          formErrors.push(`${key} is Required`);
+        }
+      })
+      if(!operatorSelected) {
+        formErrors.push("Select atleast one operator");
+      }
+      return formErrors;
+    },
     generateQuiz() {
+      this.configErrors = this.areFormErrorsPresent();
+      if(this.configErrors.length) {
+        return;
+      }
       const quizId = this.quizList.length + 1;
       this.quizList = [...this.quizList, { id: quizId, ...this.quizConfig }];
       this.resetFields();
     },
     handleInputChange(event) {
-      this.quizConfig[event.target.name] = parseInt(event.target.value);
+      const value = parseInt(event.target.value);
+      this.quizConfig[event.target.name] = isNaN(value) ? "" : value;
     },
     handleCheckboxChange(event) {
-      this.quizConfig.operators[event.target.value] = event.target.checked;
+      let op = this.quizConfig.operators[event.target.value];
+      op.checked = event.target.checked;
     },
     resetFields() {
-      this.quizConfig = defaultValues;
-      console.log(this.quizConfig);
+      this.quizConfig = { ...defaultValues };
+      this.configErrors = [];
     },
   },
 };

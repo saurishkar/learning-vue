@@ -12,21 +12,22 @@
     <h5 class="description mb-3">
       <slot name="description" :expression="question.expression"></slot>
     </h5>
-    <div class="answer-container container" :key="question.id">
+    <form @submit.prevent="submitResponse" :key="question.id">
+      <div class="answer-container container">
+        <input
+          type="number"
+          v-model="answer"
+          step="0.01"
+          class="answer form-control"
+          placeholder="Your Answer"
+        />
+      </div>
       <input
-        type="number"
-        v-model="answer"
-        autofocus="true"
-        class="answer form-control"
-        placeholder="Your Answer"
+        type="submit"
+        value="Next"
+        class="btn btn-success mt-2"
       />
-    </div>
-    <button
-      class="btn btn-success mt-2"
-      @click="submitResponse"
-    >
-      Next
-    </button>
+    </form>
   </div>
 </template>
 
